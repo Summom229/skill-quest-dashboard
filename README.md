@@ -2,7 +2,7 @@
 
 ## Preview
 
-![Preview](./public/files/preview.jpg)
+![Preview](./public/files/preview.jpeg)
 
 
 Skill Quest Dashboard is a vanilla HTML/CSS/JavaScript learning dashboard served by a Node.js + Express backend. The UI keeps the existing soft glass theme while app data is stored in temporary in-memory backend state.
