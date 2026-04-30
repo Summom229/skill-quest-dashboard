@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Skill Quest Dashboard - Track your learning progress offline">
+  <meta name="theme-color" content="#5d7df0">
+  <title>Skill Quest Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <div class="app-shell">
+    <aside class="sidebar glass-panel" id="sidebar" role="navigation" aria-label="Main navigation">
+      <div>
+        <div class="sidebar-header">
+          <p class="brand-mark" aria-label="Skill Quest Dashboard">⚔️ Skill Quest</p>
+        </div>
+        <nav class="nav-menu" aria-label="Primary navigation">
+          <button class="nav-item active" data-view="dashboard" type="button" aria-current="page">
+            <span class="nav-icon">📊</span> Dashboard
+          </button>
+          <button class="nav-item" data-view="tasks" type="button">
+            <span class="nav-icon">📝</span> Quests
+          </button>
+          <button class="nav-item" data-view="skills" type="button">
+            <span class="nav-icon">🎯</span> Skills
+          </button>
+          <button class="nav-item" data-view="roadmap" type="button">
+            <span class="nav-icon">🗺️</span> Roadmap
+          </button>
+          <button class="nav-item" data-view="badges" type="button">
+            <span class="nav-icon">🏆</span> Badges
+          </button>
+          <button class="nav-item" data-view="missions" type="button">
+            <span class="nav-icon">🎖️</span> Missions
+          </button>
+          <button class="nav-item" data-view="streak" type="button">
+            <span class="nav-icon">🔥</span> Streak
+          </button>
+        </nav>
+      </div>
+      <div class="sidebar-summary" id="sidebarSummary" aria-live="polite"></div>
+    </aside>
+
+    <div class="app-main">
+      <header class="topbar glass-panel" role="banner">
+        <button class="icon-button menu-toggle" id="menuToggle" type="button" 
+                aria-label="Open navigation menu" aria-expanded="false" aria-controls="sidebar">
+          <span class="menu-icon">☰</span>
+        </button>
+        <div class="topbar-search" aria-label="Quick search">
+          <span class="search-icon">🔍</span> Search quests from the Quests page
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-button theme-toggle" id="themeToggle" type="button" 
+                  aria-label="Toggle dark theme">
+            <span id="themeToggleIcon">◐</span>
+            <span id="themeToggleLabel" class="theme-label">Theme</span>
+          </button>
+        </div>
+      </header>
+      
+      <main class="main-content" id="main-content">
+        <section id="viewHeader" class="view-header glass-panel" aria-label="View header"></section>
+        <section id="mainWorkspace" class="workspace" aria-live="polite" aria-atomic="true"></section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Task Modal -->
+  <div class="modal-overlay hidden" id="taskModal" aria-hidden="true" role="dialog">
+    <div class="modal-card glass-panel" aria-modal="true" aria-labelledby="taskModalTitle">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Quest</p>
+          <h2 id="taskModalTitle">Add Quest</h2>
+        </div>
+        <button class="icon-button modal-close" id="closeModalButton" type="button" 
+                aria-label="Close quest form">✕</button>
+      </div>
+
+      <form id="taskForm" novalidate>
+        <div class="form-grid">
+          <label class="field-group">
+            <span>Skill <span class="required">*</span></span>
+            <select id="taskSkill" name="skillId" required aria-describedby="taskSkillError">
+              <option value="">Select a skill</option>
+            </select>
+            <small class="field-error" id="taskSkillError" data-error-for="skillId" aria-live="polite"></small>
+          </label>
+
+          <label class="field-group">
+            <span>Quest <span class="required">*</span></span>
+            <select id="taskPreset" name="presetQuest" required disabled aria-describedby="taskPresetError">
+              <option value="">Select a skill first</option>
+            </select>
+            <small class="field-error" id="taskPresetError" data-error-for="presetQuest" aria-live="polite"></small>
+          </label>
+        </div>
+
+        <div class="xp-preview" aria-live="polite">
+          <span>Estimated reward</span>
+          <div class="reward-badges">
+            <strong id="taskDifficultyPreview">Select a quest</strong>
+            <strong id="taskXpReward">0 XP</strong>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="secondary-button" id="cancelTaskButton" type="button">Cancel</button>
+          <button class="primary-button" id="saveTaskButton" type="submit">
+            <span class="button-icon">💾</span> Save Quest
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Skill Modal -->
+  <div class="modal-overlay hidden" id="skillModal" aria-hidden="true" role="dialog">
+    <div class="modal-card glass-panel" aria-modal="true" aria-labelledby="skillModalTitle">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Skill</p>
+          <h2 id="skillModalTitle">Add Skill</h2>
+        </div>
+        <button class="icon-button modal-close" id="closeSkillModalButton" type="button" 
+                aria-label="Close skill form">✕</button>
+      </div>
+
+      <form id="skillForm" novalidate>
+        <div class="form-grid">
+          <label class="field-group">
+            <span>Skill name <span class="required">*</span></span>
+            <input id="skillName" name="name" type="text" 
+                   placeholder="TypeScript" required
+                   aria-describedby="skillNameError">
+            <small class="field-error" id="skillNameError" data-error-for="skillName" aria-live="polite"></small>
+          </label>
+
+          <label class="field-group">
+            <span>Color</span>
+            <input id="skillColor" name="color" type="color" value="#3b72f6"
+                   aria-label="Choose skill color">
+          </label>
+
+          <label class="field-group field-group-full">
+            <span>Description</span>
+            <textarea id="skillDescription" name="description" rows="3" 
+                      placeholder="What does this skill path help you practice?"></textarea>
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button class="secondary-button" id="cancelSkillButton" type="button">Cancel</button>
+          <button class="primary-button" id="saveSkillButton" type="submit">
+            <span class="button-icon">💾</span> Save Skill
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="feedbackToast" role="status" aria-live="polite"></div>
+</body>
+</html>
